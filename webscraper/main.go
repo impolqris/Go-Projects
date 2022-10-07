@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
-	"strings"
 
 	"github.com/chromedp/chromedp"
 )
@@ -17,16 +17,18 @@ func main() {
 	ctx, cancel := chromedp.NewContext(context.Background())
 	defer cancel()
 
-	var result string
+	var result []map[string]string
 
 	err := chromedp.Run(ctx,
 		chromedp.Navigate(ITPUrl),
-		chromedp.Text(ClassToLookFor, &result, chromedp.NodeVisible),
+		chromedp.AttributesAll(ClassToLookFor, &result, chromedp.ByQueryAll),
 	)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println(strings.TrimSpace(result))
+	for _, v := range result {
+		fmt.Printf("%v\n", v)
+	}
 }
